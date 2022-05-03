@@ -6,10 +6,10 @@ import ordersRoute from "./express.orders.routes";
 
 const routes = express.Router();
 
-routes.use("/auth", authRoute);
-routes.use("/profile", profileRoute);
+routes.use("/api/auth", authRoute);
+routes.use("/api/profile", profileRoute);
 
-routes.use("/products", productsRoute);
-routes.use("/orders", ordersRoute);
+routes.use("/api/products", productsRoute);
+routes.use("/api/orders", ordersRoute);
 
 export default routes;

@@ -1,11 +1,11 @@
 import express, { Request, Response } from "express";
-import { UsersStore } from "../models/user.model";
+import { UsersStore } from "../../models/user.model";
 import jwt from "jsonwebtoken";
 import httpErrors from "@hapi/boom";
 import bcrypt from "bcrypt";
 import randtoken from "rand-token";
-import { generateNanoid } from "../utils";
-import { Constants } from "../utils/Constants";
+import { generateNanoid } from "../../utils";
+import { Constants } from "../../utils/Constants";
 
 const store = new UsersStore();
 const authRoute = express.Router();
@@ -41,9 +41,8 @@ authRoute.post(
       return next(httpErrors.badData(`Invalid username or password!`));
     }
 
-    // valid for an hour.
     const token = jwt.sign(
-      { uid: user.uid, exp: Math.floor(Date.now() / 1000) + 60 * 60 },
+      {uid: user.uid},
       process.env.TOKEN_SECRET ?? ""
     );
 
@@ -96,7 +95,7 @@ authRoute.post(
 
     // valid for an hour.
     const token = jwt.sign(
-      { uid: user.uid, exp: Math.floor(Date.now() / 1000) + 60 * 60 },
+      { uid: user.uid },
       process.env.TOKEN_SECRET ?? ""
     );
 

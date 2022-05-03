@@ -15,7 +15,7 @@ const errorsMiddleware = (
   const token = request.headers.authorization;
   const authorizedRequests = ["profile", "orders"];
 
-  if(authorizedRequests.includes(request.url.split("/")[1])){
+  if(authorizedRequests.includes(request.url.split("/")[2])){
     if (!token) {
       return next(httpErrors.unauthorized("No token provided!"));
     }

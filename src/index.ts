@@ -1,5 +1,5 @@
 import express from "express";
-import routes from "./routes/index";
+import userRoutes from "./routes/user/index";
 import middleware from "./middleware/index";
 import dotenv from "dotenv";
 
@@ -12,7 +12,7 @@ app.use(middleware.loggingMiddleware);
 app.use(middleware.authMiddleware);
 
 app.use("/public", express.static("./public"));
-app.use(routes);
+app.use(userRoutes);
 
 app.use(middleware.errorsMiddleware);
 

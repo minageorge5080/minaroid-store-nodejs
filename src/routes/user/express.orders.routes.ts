@@ -1,8 +1,6 @@
 import express, { Request, Response } from "express";
-import { UsersStore } from "../models/user.model";
 import httpErrors from "@hapi/boom";
 
-const store = new UsersStore();
 const orderssRoute = express.Router();
 
 orderssRoute.get(
