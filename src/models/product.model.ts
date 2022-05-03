@@ -9,9 +9,10 @@ export type ProductModel = {
 };
 
 export class ProductsStore {
-
   async show(uid?: string): Promise<ProductModel | undefined> {
-    if (!uid) { return undefined; }
+    if (!uid) {
+      return undefined;
+    }
     const sql = "SELECT * FROM products WHERE uid=($1)";
     const conn = await client.connect();
     return await conn

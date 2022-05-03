@@ -7,7 +7,6 @@ const errorsMiddleware = (
   response: express.Response,
   next: Function
 ): any => {
-  
   if (request.url.startsWith("/public")) {
     return next();
   }
@@ -15,7 +14,7 @@ const errorsMiddleware = (
   const token = request.headers.authorization;
   const authorizedRequests = ["profile", "orders"];
 
-  if(authorizedRequests.includes(request.url.split("/")[1])){
+  if (authorizedRequests.includes(request.url.split("/")[1])) {
     if (!token) {
       return next(httpErrors.unauthorized("No token provided!"));
     }
@@ -30,7 +29,7 @@ const errorsMiddleware = (
         return next();
       }
     );
-  } else { 
+  } else {
     if (token) {
       jwt.verify(
         token.replace("Bearer ", ""),
@@ -44,7 +43,6 @@ const errorsMiddleware = (
       return next();
     }
   }
-
 };
 
 export default errorsMiddleware;

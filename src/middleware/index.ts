@@ -5,5 +5,5 @@ import authMiddleware from "./express.auth.middleware";
 export default {
   loggingMiddleware,
   errorsMiddleware,
-  authMiddleware
+  authMiddleware,
 };

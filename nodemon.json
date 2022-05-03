@@ -1,6 +1,0 @@
-{
-	"exec": "ts-node -r dotenv/config src/index.ts",
-	"watch": ["src"],
-	"ext": "ts",
-	"delay": 3000
-}

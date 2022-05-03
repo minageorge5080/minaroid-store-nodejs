@@ -6,17 +6,15 @@
   "scripts": {
     "build": "rm -rf ./build && npx tsc",
     "start": "npm run build && node build/src/index.js",
-    "develop": "npm run db:migrate && nodemon",
     "test:integration": "npm run db:create:test && npm run db:migrate:test && npm run build && NODE_ENV=test jasmine build/test/integration/**/*.spec.js ; npm run db:drop:test",
     "test:unit": "npm run build && jasmine build/test/unit/**/*.spec.js",
     "db:migrate": "db-migrate --config ./db/database.json  -m ./db/migrations up",
     "db:migrate:test": "db-migrate --config ./db/database.json  -m ./db/migrations --env test up",
     "db:create:test": "db-migrate --config ./db/database.json  -m ./db/migrations  db:create minaroid_store_test",
     "db:drop:test": "db-migrate --config ./db/database.json  -m ./db/migrations  db:drop minaroid_store_test",
-    "db:seed": "db-migrate --config ./db/database.json  --vcseeder-dir ./db/seeders seed",
-    "db:seed:test": "db-migrate --config ./db/database.json  --vcseeder-dir ./db/seeders-test seed",
     "lint": "eslint 'src/**/*.ts",
-    "prettier": "prettier --config .prettierrc 'src/**/*.ts' --write"
+    "prettier": "prettier --config .prettierrc 'src/**/*.ts' --write",
+    "develop": "npm run db:migrate && tsc-watch --noClear -p ./tsconfig.json --onSuccess \"node ./build/src/index.js\""
   },
   "keywords": [],
   "author": "Mina George",
@@ -35,9 +33,9 @@
     "eslint": "^8.14.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.0.0",
-    "nodemon": "^2.0.16",
     "prettier": "^2.2.1",
     "ts-node": "^10.7.0",
+    "tsc-watch": "^5.0.3",
     "typescript": "^4.6.4"
   },
   "dependencies": {

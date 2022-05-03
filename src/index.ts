@@ -6,8 +6,8 @@ import authRoutes from "./handlers/user/auth.handler";
 import ordersRoutes from "./handlers/user/orders.handler";
 import productsRoutes from "./handlers/user/products.handler";
 
-
 dotenv.config();
+
 
 const app = express();
 
@@ -17,10 +17,10 @@ app.use(middleware.authMiddleware);
 
 app.use("/public", express.static("./public"));
 
-authRoutes(app)
-profileRoutes(app)
-ordersRoutes(app)
-productsRoutes(app)
+authRoutes(app);
+profileRoutes(app);
+ordersRoutes(app);
+productsRoutes(app);
 
 app.use(middleware.errorsMiddleware);
 
