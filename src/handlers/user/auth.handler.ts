@@ -10,9 +10,7 @@ import { Constants } from "../../utils/Constants";
 const store = new UsersStore();
 const authRoute = express.Router();
 
-authRoute.post(
-  "/login",
-  async (request: Request, response: Response, next: Function) => {
+const login = async (request: Request, response: Response, next: Function) => {
     const username = request.body.username;
     let password = request.body.password;
 
@@ -48,11 +46,9 @@ authRoute.post(
 
     response.status(200).json({ token });
   }
-);
 
-authRoute.post(
-  "/create-account",
-  async (request: Request, response: Response, next: Function) => {
+
+const signup =async (request: Request, response: Response, next: Function) => {
     const username = request.body.username;
     const firstname = request.body.firstname;
     const lastname = request.body.lastname;
@@ -77,7 +73,7 @@ authRoute.post(
     password = password + process.env.BCRYPT_PASSWORD;
     const password_digest = await bcrypt.hash(
       password,
-      parseInt(process.env.SALT_PASSWORD ?? "0")
+      parseInt(process.env.SALT_PASSWORD ?? "10")
     );
 
     const uid = generateNanoid(Constants.ALPHABET_UID, 30);
@@ -93,7 +89,6 @@ authRoute.post(
       return next(httpErrors.badRequest(`Cant create user!`));
     }
 
-    // valid for an hour.
     const token = jwt.sign(
       { uid: user.uid },
       process.env.TOKEN_SECRET ?? ""
@@ -101,6 +96,11 @@ authRoute.post(
 
     response.status(201).json({ token });
   }
-);
 
-export default authRoute;
+const authRoutes = (app: express.Application) => {
+  app.post('/auth/login', login)
+  app.post('/auth/signup', signup)
+}
+ 
+
+export default authRoutes;

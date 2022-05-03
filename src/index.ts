@@ -1,7 +1,11 @@
 import express from "express";
-import userRoutes from "./routes/user/index";
 import middleware from "./middleware/index";
 import dotenv from "dotenv";
+import profileRoutes from "./handlers/user/profile.handler";
+import authRoutes from "./handlers/user/auth.handler";
+import ordersRoutes from "./handlers/user/orders.handler";
+import productsRoutes from "./handlers/user/products.handler";
+
 
 dotenv.config();
 
@@ -12,7 +16,11 @@ app.use(middleware.loggingMiddleware);
 app.use(middleware.authMiddleware);
 
 app.use("/public", express.static("./public"));
-app.use(userRoutes);
+
+authRoutes(app)
+profileRoutes(app)
+ordersRoutes(app)
+productsRoutes(app)
 
 app.use(middleware.errorsMiddleware);
 
