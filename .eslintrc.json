@@ -1,0 +1,29 @@
+{
+    "parser": "@typescript-eslint/parser",
+    "rules": {
+		"import/extensions": 0,
+		"class-methods-use-this": 0,
+		"import/no-unresolved": 0,
+		"import/prefer-default-export": 0,
+		"no-else-return": 1,
+		"max-classes-per-file": 0,
+		"no-use-before-define": "off",
+		"camelcase": 0,
+		"@typescript-eslint/no-empty-interface": 0,
+		"lines-between-class-members": 0,
+		"no-param-reassign": 0,
+		"no-underscore-dangle": 0,
+		"no-console": 0,
+		"prefer-promise-reject-errors": 0,
+		"no-async-promise-executor": 0,
+		"prefer-destructuring": 0,
+		"no-prototype-builtins": 0,
+		"no-unused-expressions": 0,
+		"new-cap": 0,
+		"no-plusplus": 0,
+		"no-continue": 0,
+		"arrow-body-style": ["warn", "as-needed"],
+		"no-shadow": "off",
+		"default-param-last": "warn"
+	}
+}
