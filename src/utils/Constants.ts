@@ -4,7 +4,6 @@ export class Constants {
 }
 
 export enum ORDER_STATUS {
-  PENDING = "pending",
-  DELIVERED = "delivered",
-  OUT_OF_DELEIVERY = "outOfdelivery",
+  ACTIVE = "active",
+  COMPLETED = "complete"
 }

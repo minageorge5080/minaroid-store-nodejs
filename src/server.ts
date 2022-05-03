@@ -1,7 +1,7 @@
 import express from "express";
 import middleware from "./middleware/index";
 import dotenv from "dotenv";
-import profileRoutes from "./handlers/user/profile.handler";
+import profileRoutes from "./handlers/user/users.handler";
 import authRoutes from "./handlers/user/auth.handler";
 import ordersRoutes from "./handlers/user/orders.handler";
 import productsRoutes from "./handlers/user/products.handler";
@@ -14,8 +14,6 @@ const app = express();
 app.use(express.json());
 app.use(middleware.loggingMiddleware);
 app.use(middleware.authMiddleware);
-
-app.use("/public", express.static("./public"));
 
 authRoutes(app);
 profileRoutes(app);

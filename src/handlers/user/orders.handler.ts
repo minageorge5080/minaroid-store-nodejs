@@ -1,98 +1,77 @@
 import express, { Request, Response } from "express";
-import { OrdersStore } from "../../models/order.model";
+import { OrderModel, OrdersStore } from "../../models/order.model";
 import { UsersStore } from "../../models/user.model";
 import httpErrors from "@hapi/boom";
 import { ORDER_STATUS } from "../../utils/Constants";
+import { ProductModel, ProductsStore } from "../../models/product.model";
 
 const ordersStore = new OrdersStore();
 const userStore = new UsersStore();
+const productsStore = new ProductsStore();
 
-const show = async (request: any, response: Response, next: Function) => {
-  const userUid = request.uid;
+const show = async (request: Request, response: Response, next: Function) => {
+  // check if user already have active order.
+  const user = await userStore.verifyToken(request.headers.authorization)
+  if(!user) { return next(httpErrors.unauthorized(`Unauthorized user!`)); }
+
   const orderId = request.params.id;
-  const user = await userStore.findUserByUid(userUid);
   if (!user) {
     return next(httpErrors.notFound(`User not found!`));
   }
-  const order = await ordersStore.show(orderId, user?.id);
+  const order = await ordersStore.show(parseInt(orderId), user?.id);
   if (!order) {
     return next(httpErrors.notFound(`Order not found!`));
   }
   response.status(200).json(order);
 };
 
-const index = async (request: any, response: Response, next: Function) => {
-  const userUid = request.uid;
-  const user = await userStore.findUserByUid(userUid);
-  if (!user) {
-    return next(httpErrors.notFound(`User not found!`));
+const create = async (request: Request, response: Response, next: Function) => {
+  const products = (request.body.products as {uid:string, quantity: number}[]) ?? []
+  if(!products.length) { return next(httpErrors.badData(`Products required!`)); }
+
+  // validate products existence
+  const uids = products.map((p) => p.uid);
+  const productsPromises: Promise<ProductModel | undefined>[] = []
+  uids.forEach((uid) => { productsPromises.push(productsStore.show(uid)) });
+  const productsModels = await (await Promise.all(productsPromises)).filter((p) => p!== undefined)
+  if(productsModels.length !== products.length) { return next(httpErrors.badData(`Invalid products Uids.`)); }
+
+  // check if user already have active order.
+  const user = await userStore.verifyToken(request.headers.authorization)
+  if(!user) { return next(httpErrors.unauthorized(`Unauthorized user!`)); }
+  const activeOrder = await (await ordersStore.index(user.id)).filter((o) => o.status == ORDER_STATUS.ACTIVE)
+  let order: OrderModel | undefined = undefined; 
+  if(activeOrder.length) {
+    // append to the active order.
+    order = activeOrder[0]
+  } else {
+    // create new order
+    order = await ordersStore.create(ORDER_STATUS.ACTIVE, user?.id)
+    if(!order) { return next(httpErrors.badRequest(`Cant create order!.`)); }
   }
+
+  productsModels.forEach(async (p, index) => {
+    await ordersStore.addProductToOrder(products[index].quantity, order?.id, p?.id)
+  })
+
+  if(order) {
+    const newOrder = await ordersStore.show(order?.id, user.id)
+    response.status(200).json(newOrder);
+  } else { return next(httpErrors.badRequest(`Cant create order!.`)); }
+
+};
+
+const index = async (request: Request, response: Response, next: Function) => {
+  const user = await userStore.verifyToken(request.headers.authorization)
+  if(!user) { return next(httpErrors.unauthorized(`Unauthorized user!`)); }
   const orders = await ordersStore.index(user?.id);
-  response.status(200).json(orders);
-};
-
-const changeOrderStatus = async (
-  request: any,
-  response: Response,
-  next: Function
-) => {
-  const userUid = request.uid;
-  const orderId = request.params.id;
-  const status = request.body.status;
-  if (!status) {
-    return next(httpErrors.badData(`Status Required!`));
-  }
-
-  const user = await userStore.findUserByUid(userUid);
-  if (!user) {
-    return next(httpErrors.notFound(`User not found!`));
-  }
-
-  const validStatus: ORDER_STATUS[] = [
-    ORDER_STATUS.OUT_OF_DELEIVERY,
-    ORDER_STATUS.PENDING,
-    ORDER_STATUS.DELIVERED,
-  ];
-  if (!validStatus.includes(status)) {
-    return next(httpErrors.badRequest(`Invalid status type`));
-  }
-  const order = await ordersStore.show(orderId, user?.id);
-  if (!order) {
-    return next(httpErrors.notFound(`Order not found!`));
-  }
-  if (order.status == status) {
-    return next(httpErrors.badRequest(`Order already ${status}`));
-  }
-
-  const updatedOrder = await ordersStore.changeOrderStatus(
-    status,
-    orderId,
-    user?.id
-  );
-  response.status(200).json(updatedOrder);
-};
-
-const indexByStatus = async (
-  request: any,
-  response: Response,
-  next: Function
-) => {
-  const userUid = request.uid;
-  const status = request.params.status;
-
-  const user = await userStore.findUserByUid(userUid);
-  if (!user) {
-    return next(httpErrors.notFound(`User not found!`));
-  }
-  const orders = await ordersStore.indexByStatus(status, user?.id);
   response.status(200).json(orders);
 };
 
 const ordersRoutes = (app: express.Application) => {
   app.get("/orders", index);
+  app.post("/orders", create);
   app.get("/orders/:id", show);
-  app.get("/orders/status/:status", indexByStatus);
-  app.post("/orders/status/:id", changeOrderStatus);
 };
 
 export default ordersRoutes;

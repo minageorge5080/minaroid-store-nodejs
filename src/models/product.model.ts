@@ -9,10 +9,16 @@ export type ProductModel = {
 };
 
 export class ProductsStore {
+  // async showUids(uids?: string[]): Promise<ProductModel[] | undefined> {
+  //   if (!uids) {  return undefined; }
+  //    const productsPromises: Promise<ProductModel | undefined>[] = []
+  //    uids.forEach((uid) => { productsPromises.push(this.show(uid)) });
+
+  //     return Promise.all(productsPromises)
+  // }
+
   async show(uid?: string): Promise<ProductModel | undefined> {
-    if (!uid) {
-      return undefined;
-    }
+    if (!uid) {  return undefined; }
     const sql = "SELECT * FROM products WHERE uid=($1)";
     const conn = await client.connect();
     return await conn
@@ -29,6 +35,21 @@ export class ProductsStore {
       .query(sql)
       .then((result) => result.rows ?? [])
       .catch((e) => [])
+      .finally(() => conn.release());
+  }
+
+  async create(user: ProductModel): Promise<ProductModel | undefined> {
+    const sql =  "INSERT INTO products (uid, title, description, price) VALUES($1, $2, $3, $4) RETURNING *";
+    const conn = await client.connect();
+    return await conn
+      .query(sql, [
+        user.uid,
+        user.title,
+        user.description,
+        user.price
+      ])
+      .then((result) => result.rows[0] ?? undefined)
+      .catch((e) => console.log(e))
       .finally(() => conn.release());
   }
 }
