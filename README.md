@@ -17,8 +17,9 @@ Installation
 
 - Change database configrations in ````./db/database.json```` to match your local environment.
 - Run ````npm install```` to download project dependencies. 
-- For developemnt ````npm run watch```` .
-- For compile & run  ````npm run start```` .
+- For developemnt ````npm run watch```` . will automatically run database migrations.
+- For compile & run  ````npm run start```` .  will automatically run database migrations.
+- For migrations  ````npm run db:migrate```` .  will automatically run database migrations.
 
 Testing
 ===========================
