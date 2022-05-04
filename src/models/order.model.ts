@@ -63,15 +63,13 @@ export class OrdersStore {
       const model: OrderModel = {
         id: order.id,
         status: order.status,
-        products: ordersProducts.map((p) => {
-          return {
+        products: ordersProducts.map((p) => ({
             uid: p.uid,
             title: p.title,
             description: p.description,
             price: p.price,
             quantity: p.quantity,
-          };
-        }),
+          })),
       };
       return model;
     } catch (e) {
@@ -96,15 +94,13 @@ export class OrdersStore {
           const model: OrderModel = {
             id: order.id,
             status: order.status,
-            products: ordersProducts.map((p) => {
-              return {
+            products: ordersProducts.map((p) => ({
                 uid: p.uid,
                 title: p.title,
                 description: p.description,
                 price: p.price,
                 quantity: p.quantity,
-              };
-            }),
+              })),
           };
           return model;
         })
