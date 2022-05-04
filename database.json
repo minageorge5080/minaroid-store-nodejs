@@ -1,14 +1,16 @@
 {
     "dev": {
       "driver": "pg",
-      "host": "127.0.0.1",
+      "host": "localhost",
+      "port": "5430",
       "database": "minaroid_store_dev",
       "user": "postgres",
       "password": "admin"
     },
     "test": {
       "driver": "pg",
-      "host": "127.0.0.1",
+      "host": "localhost",
+      "port": "5430",
       "database": "minaroid_store_test",
       "user": "postgres",
       "password": "admin"

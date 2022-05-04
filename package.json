@@ -11,10 +11,10 @@
     "test:integration": "npm run db:create:test && npm run db:migrate:test && npm run build && NODE_ENV=test jasmine build/test/integration/**/*.spec.js ; npm run db:drop:test",
     "test:unit": "npm run build && jasmine build/test/unit/**/*.spec.js",
 
-    "db:migrate": "db-migrate --config ./db/database.json  -m ./db/migrations up",
-    "db:migrate:test": "db-migrate --config ./db/database.json  -m ./db/migrations --env test up && db-migrate --config ./db/database.json  -m ./db/migrations --env test up:test",
-    "db:create:test": "db-migrate --config ./db/database.json  -m ./db/migrations  db:create minaroid_store_test",
-    "db:drop:test": "db-migrate --config ./db/database.json  -m ./db/migrations  db:drop minaroid_store_test",
+    "db:migrate": "db-migrate up",
+    "db:migrate:test": "db-migrate --env test up && db-migrate --env test up:test",
+    "db:create:test": "db-migrate db:create minaroid_store_test",
+    "db:drop:test": "db-migrate db:drop minaroid_store_test",
    
     "lint": "eslint 'src/**/*.ts' 'test/**/*.ts'",
     "prettier": "prettier --config .prettierrc 'src/**/*.ts' 'test/**/*.ts' --write"

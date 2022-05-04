@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+    db:
+        container_name: 'minaroid_store'
+        image: 'postgres'
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=admin
+            - POSTGRES_DB=minaroid_store_dev
+        ports:
+            - '5430:5432'
