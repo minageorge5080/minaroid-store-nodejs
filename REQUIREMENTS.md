@@ -44,5 +44,5 @@ These are the notes from a meeting with the frontend developer that describe wha
 #### Order
 - id  [Number]
 - status [String]
-- products [ Product[] ]
+- products [Product[] ]
 
