@@ -8,18 +8,20 @@ These are the notes from a meeting with the frontend developer that describe wha
 #### Products
 - Index ````/products```` [GET]
 - Show ````/products/(product-uid)```` [GET]
+- Delete ````/products/(product-uid)```` [DELETE] [token required] 
 - Create ````/products````  [POST] (body: Product)[token required] 
 
-#### Authentication
-- Login  ````auth/login````(body: (username & password))
-- Signup  ````auth/signup````(body: User)
 
 #### Users
-- Index  ````/users```` [token required]
-- Show ````/users/(user-uid```` [token required]
+- Login  ````/users/login```` [POST] (body: (username & password))
+- Signup  ````/users/signup```` [POST] (body: User)
+- Index  ````/users```` [GET] [token required]
+- Show ````/users/(user-uid)```` [GET] [token required]
 
 #### Orders
-- Current Order by user ````/orders/(product-uid)````  (args: user id)[token required]
+- Index  ````/orders```` [GET] [token required]
+- Show ````/ordersrs/(orde-id)```` [GET] [token required]
+- Create ````/ordersrs````  [POST] (body: Order) [token required] 
 
 
 ## Data Shapes
@@ -39,10 +41,8 @@ These are the notes from a meeting with the frontend developer that describe wha
 - lastName [String]
 - password [String]
 
-* #### Orders
-* - id
-* - id of each product in the order
-* - quantity of each product in the order
-* - user_id
-* - status of order (active or complete)
-* 
+#### Order
+- id  [Number]
+- status [String]
+- products [ Product[] ]
+
