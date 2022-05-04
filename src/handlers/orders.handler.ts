@@ -10,8 +10,10 @@ const userStore = new UsersStore();
 const productsStore = new ProductsStore();
 
 const show = async (request: Request, response: Response, next: Function) => {
-  const user = await userStore.verifyToken(request.headers.authorization)
-  if(!user) { return next(httpErrors.unauthorized(`Unauthorized user!`)); }
+  const user = await userStore.verifyToken(request.headers.authorization);
+  if (!user) {
+    return next(httpErrors.unauthorized(`Unauthorized user!`));
+  }
 
   const orderId = request.params.id;
   if (!user) {
@@ -25,45 +27,67 @@ const show = async (request: Request, response: Response, next: Function) => {
 };
 
 const create = async (request: Request, response: Response, next: Function) => {
-  const user = await userStore.verifyToken(request.headers.authorization)
-  if(!user) { return next(httpErrors.unauthorized(`Unauthorized user!`)); }
+  const user = await userStore.verifyToken(request.headers.authorization);
+  if (!user) {
+    return next(httpErrors.unauthorized(`Unauthorized user!`));
+  }
 
-  const products = (request.body.products as {uid:string, quantity: number}[]) ?? []
-  if(!products.length) { return next(httpErrors.badData(`Products required!`)); }
+  const products =
+    (request.body.products as { uid: string; quantity: number }[]) ?? [];
+  if (!products.length) {
+    return next(httpErrors.badData(`Products required!`));
+  }
 
   // validate products existence
   const uids = products.map((p) => p.uid);
-  const productsPromises: Promise<ProductModel | undefined>[] = []
-  uids.forEach((uid) => { productsPromises.push(productsStore.show(uid)) });
-  const productsModels = await (await Promise.all(productsPromises)).filter((p) => p!== undefined)
-  if(productsModels.length !== products.length) { return next(httpErrors.badData(`Invalid products Uids.`)); }
+  const productsPromises: Promise<ProductModel | undefined>[] = [];
+  uids.forEach((uid) => {
+    productsPromises.push(productsStore.show(uid));
+  });
+  const productsModels = await (
+    await Promise.all(productsPromises)
+  ).filter((p) => p !== undefined);
+  if (productsModels.length !== products.length) {
+    return next(httpErrors.badData(`Invalid products Uids.`));
+  }
 
   // check if user already have active order.
-  const activeOrder = await (await ordersStore.index(user.id)).filter((o) => o.status == ORDER_STATUS.ACTIVE)
-  let order: OrderModel | undefined = undefined; 
-  if(activeOrder.length) {
+  const activeOrder = await (
+    await ordersStore.index(user.id)
+  ).filter((o) => o.status == ORDER_STATUS.ACTIVE);
+  let order: OrderModel | undefined = undefined;
+  if (activeOrder.length) {
     // append to the active order.
-    order = activeOrder[0]
+    order = activeOrder[0];
   } else {
     // create new order
-    order = await ordersStore.create(ORDER_STATUS.ACTIVE, user?.id)
-    if(!order) { return next(httpErrors.badRequest(`Cant create order!.`)); }
+    order = await ordersStore.create(ORDER_STATUS.ACTIVE, user?.id);
+    if (!order) {
+      return next(httpErrors.badRequest(`Cant create order!.`));
+    }
   }
 
   productsModels.forEach(async (p, index) => {
-    await ordersStore.addProductToOrder(products[index].quantity, order?.id, p?.id)
-  })
+    await ordersStore.addProductToOrder(
+      products[index].quantity,
+      order?.id,
+      p?.id
+    );
+  });
 
-  if(order) {
-    const newOrder = await ordersStore.show(order?.id, user.id)
+  if (order) {
+    const newOrder = await ordersStore.show(order?.id, user.id);
     response.status(200).json(newOrder);
-  } else { return next(httpErrors.badRequest(`Cant create order!.`)); }
-
+  } else {
+    return next(httpErrors.badRequest(`Cant create order!.`));
+  }
 };
 
 const index = async (request: Request, response: Response, next: Function) => {
-  const user = await userStore.verifyToken(request.headers.authorization)
-  if(!user) { return next(httpErrors.unauthorized(`Unauthorized user!`)); }
+  const user = await userStore.verifyToken(request.headers.authorization);
+  if (!user) {
+    return next(httpErrors.unauthorized(`Unauthorized user!`));
+  }
 
   const orders = await ordersStore.index(user?.id);
   response.status(200).json(orders);

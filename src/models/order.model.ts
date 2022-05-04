@@ -16,27 +16,35 @@ export type OrderProduct = {
 };
 
 export class OrdersStore {
- 
-  async create(status: ORDER_STATUS, userId?: number): Promise<OrderModel | undefined> {
-    const sql =  "INSERT INTO orders (status, user_id) VALUES($1, $2) RETURNING *";
+  async create(
+    status: ORDER_STATUS,
+    userId?: number
+  ): Promise<OrderModel | undefined> {
+    const sql =
+      "INSERT INTO orders (status, user_id) VALUES($1, $2) RETURNING *";
     const conn = await client.connect();
     return await conn
-      .query(sql, [ status,userId ])
+      .query(sql, [status, userId])
       .then((result) => result.rows[0] ?? undefined)
       .catch((e) => undefined)
       .finally(() => conn.release());
   }
 
-  async addProductToOrder(quantity: number, orderId?: number, productId?: number ): Promise<boolean> {
-    const sql =  "INSERT INTO order_products (order_id, product_id, quantity) VALUES($1, $2, $3) RETURNING *";
+  async addProductToOrder(
+    quantity: number,
+    orderId?: number,
+    productId?: number
+  ): Promise<boolean> {
+    const sql =
+      "INSERT INTO order_products (order_id, product_id, quantity) VALUES($1, $2, $3) RETURNING *";
     const conn = await client.connect();
     return await conn
-      .query(sql, [ orderId, productId, quantity ])
+      .query(sql, [orderId, productId, quantity])
       .then((res) => true)
       .catch((e) => false)
       .finally(() => conn.release());
   }
-  
+
   async show(id?: number, userId?: number): Promise<OrderModel | undefined> {
     const conn = await client.connect();
     try {
@@ -108,5 +116,4 @@ export class OrdersStore {
       conn.release();
     }
   }
-
 }

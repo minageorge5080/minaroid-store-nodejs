@@ -5,5 +5,5 @@ export class Constants {
 
 export enum ORDER_STATUS {
   ACTIVE = "active",
-  COMPLETED = "complete"
+  COMPLETED = "complete",
 }

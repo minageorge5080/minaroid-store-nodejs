@@ -11,22 +11,24 @@ export type UserModel = {
 };
 
 export class UsersStore {
-
-  async verifyToken (token?: string) : Promise<UserModel | undefined>  { 
+  async verifyToken(token?: string): Promise<UserModel | undefined> {
     return new Promise((resolve, reject) => {
-      if(!token) { return resolve(undefined) } 
-      jwt.verify(token.replace("Bearer ", ""), process.env.TOKEN_SECRET ?? "",
+      if (!token) {
+        return resolve(undefined);
+      }
+      jwt.verify(
+        token.replace("Bearer ", ""),
+        process.env.TOKEN_SECRET ?? "",
         (error, decoded) => {
           if (!error && decoded) {
-            return resolve(this.showByUid((decoded as {uid: string}).uid))
-          } else {
-            return resolve(undefined)
-          }
+            return resolve(this.showByUid((decoded as { uid: string }).uid));
+          } 
+          return resolve(undefined);
         }
       );
-    })
+    });
   }
- 
+
   async showByUid(uid?: string): Promise<UserModel | undefined> {
     if (!uid) {
       return undefined;
@@ -63,7 +65,8 @@ export class UsersStore {
   }
 
   async create(user: UserModel): Promise<UserModel | undefined> {
-    const sql =  "INSERT INTO users (uid, firstname, lastname, username, password_digest) VALUES($1, $2, $3, $4, $5) RETURNING *";
+    const sql =
+      "INSERT INTO users (uid, firstname, lastname, username, password_digest) VALUES($1, $2, $3, $4, $5) RETURNING *";
     const conn = await client.connect();
     return await conn
       .query(sql, [

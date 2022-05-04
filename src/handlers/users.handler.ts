@@ -6,12 +6,13 @@ import bcrypt from "bcrypt";
 import { generateNanoid } from "../utils";
 import { Constants } from "../utils/Constants";
 
-
 const store = new UsersStore();
 
 const index = async (request: Request, response: Response, next: Function) => {
-  const user = await store.verifyToken(request.headers.authorization)
-  if(!user) { return next(httpErrors.unauthorized(`Unauthorized user!`)); }
+  const user = await store.verifyToken(request.headers.authorization);
+  if (!user) {
+    return next(httpErrors.unauthorized(`Unauthorized user!`));
+  }
 
   const users = await store.index();
   const userDtos = users.map((user) => {
@@ -21,17 +22,25 @@ const index = async (request: Request, response: Response, next: Function) => {
       lastname: user?.lastname,
       uid: user?.uid,
     };
-  })
+  });
   response.status(200).json(userDtos);
 };
 
-const show = async (request: express.Request, response: Response, next: Function) => {
-  const authorization = await store.verifyToken(request.headers.authorization)
-  if(!authorization) { return next(httpErrors.unauthorized(`Unauthorized user!`)); }
-  
+const show = async (
+  request: express.Request,
+  response: Response,
+  next: Function
+) => {
+  const authorization = await store.verifyToken(request.headers.authorization);
+  if (!authorization) {
+    return next(httpErrors.unauthorized(`Unauthorized user!`));
+  }
+
   const user = await store.showByUid(request.params.uid);
-  if (!user) { return next(httpErrors.notFound(`User not found!`)); }
-  
+  if (!user) {
+    return next(httpErrors.notFound(`User not found!`));
+  }
+
   const userDto = {
     firstname: user?.firstname,
     username: user?.username,
@@ -125,6 +134,5 @@ const profileRoutes = (app: express.Application) => {
   app.post("/users/login", login);
   app.post("/users/signup", signup);
 };
-
 
 export default profileRoutes;

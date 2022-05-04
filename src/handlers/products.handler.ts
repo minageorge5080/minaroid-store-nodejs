@@ -39,22 +39,32 @@ const show = async (request: Request, response: Response, next: Function) => {
 };
 
 const create = async (request: Request, response: Response, next: Function) => {
-  const user = await userStore.verifyToken(request.headers.authorization)
-  if(!user) { return next(httpErrors.unauthorized(`Unauthorized user!`)); }
+  const user = await userStore.verifyToken(request.headers.authorization);
+  if (!user) {
+    return next(httpErrors.unauthorized(`Unauthorized user!`));
+  }
 
   const title = request.body.title;
   const description = request.body.description;
   const price = request.body.price;
   const invalidParams = new Array<string>();
-  if (!title) { invalidParams.push("Title"); }
-  if (!price) { invalidParams.push("Price");}
+  if (!title) {
+    invalidParams.push("Title");
+  }
+  if (!price) {
+    invalidParams.push("Price");
+  }
   if (invalidParams.length) {
-  return next(httpErrors.badData(`Invalid paramters [${invalidParams}]`));
+    return next(httpErrors.badData(`Invalid paramters [${invalidParams}]`));
   }
 
   const uid = generateNanoid(Constants.ALPHABET_UID, 30);
   const product = await store.create({
-    uid, title,  description, price });
+    uid,
+    title,
+    description,
+    price,
+  });
 
   if (!product) {
     return next(httpErrors.badRequest(`Cant create product!`));
@@ -62,16 +72,26 @@ const create = async (request: Request, response: Response, next: Function) => {
   response.status(201).json({ product });
 };
 
-const destroy = async (request: Request, response: Response, next: Function) => {
-  const user = await userStore.verifyToken(request.headers.authorization)
-  if(!user) { return next(httpErrors.unauthorized(`Unauthorized user!`)); }
+const destroy = async (
+  request: Request,
+  response: Response,
+  next: Function
+) => {
+  const user = await userStore.verifyToken(request.headers.authorization);
+  if (!user) {
+    return next(httpErrors.unauthorized(`Unauthorized user!`));
+  }
 
   const productUid = request.params.uid;
   const product: ProductModel | undefined = await store.show(productUid);
-  if (!product) { return next(httpErrors.notFound(`Product not found!`)); }
-  const deleted = await store.destroy(productUid); 
-  if(deleted) { return  response.status(200).send("Product deleted successfully");}
-  else { return next(httpErrors.badRequest(`Cant delete this product!`)); }
+  if (!product) {
+    return next(httpErrors.notFound(`Product not found!`));
+  }
+  const deleted = await store.destroy(productUid);
+  if (deleted) {
+    return response.status(200).send("Product deleted successfully");
+  } 
+  next(httpErrors.badRequest(`Cant delete this product!`));
 };
 
 const productsRoutes = (app: express.Application) => {

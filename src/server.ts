@@ -7,7 +7,6 @@ import productsRoutes from "./handlers/products.handler";
 
 dotenv.config();
 
-
 const app = express();
 
 app.use(express.json());
