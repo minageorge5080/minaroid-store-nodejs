@@ -1,7 +1,7 @@
 import express from "express";
 
 const errorsMiddleware = (
-  error: any,
+  error: any, // typed to any so i can get output object to get my custom error.
   request: express.Request,
   response: express.Response,
   next: Function
@@ -19,7 +19,6 @@ const errorsMiddleware = (
       console.error(error?.data ?? error);
       return response.status(statusCode).json({ message });
   }
-  next();
 };
 
 export default errorsMiddleware;
