@@ -57,7 +57,7 @@ const login = async (request: Request, response: Response, next: Function) => {
     return next(httpErrors.badData(`Invalid paramters [${invalidParams}]`));
   }
 
-  const user = await store.findUserByUsername(username);
+  const user = await store.showByUsername(username);
   if (!user) {
     return next(httpErrors.badData(`Invalid username or password!`));
   }
@@ -90,7 +90,7 @@ const signup = async (request: Request, response: Response, next: Function) => {
     return next(httpErrors.badData(`Invalid paramters [${invalidParams}]`));
   }
 
-  const isUsernameExists = await store.findUserByUsername(username);
+  const isUsernameExists = await store.showByUsername(username);
   if (isUsernameExists) {
     return next(httpErrors.badData(`Username is already exist!`));
   }

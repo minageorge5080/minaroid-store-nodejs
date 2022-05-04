@@ -39,7 +39,7 @@ export class UsersStore {
       .finally(() => conn.release());
   }
 
-  async findUserByUsername(username?: string): Promise<UserModel | undefined> {
+  async showByUsername(username?: string): Promise<UserModel | undefined> {
     if (!username) {
       return undefined;
     }

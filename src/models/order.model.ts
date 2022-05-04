@@ -27,29 +27,16 @@ export class OrdersStore {
       .finally(() => conn.release());
   }
 
-  async addProductToOrder(quantity: number, orderId?: number, productId?: number ): Promise<void> {
+  async addProductToOrder(quantity: number, orderId?: number, productId?: number ): Promise<boolean> {
     const sql =  "INSERT INTO order_products (order_id, product_id, quantity) VALUES($1, $2, $3) RETURNING *";
     const conn = await client.connect();
-    await conn
+    return await conn
       .query(sql, [ orderId, productId, quantity ])
-      .catch((e) => undefined)
+      .then((res) => true)
+      .catch((e) => false)
       .finally(() => conn.release());
   }
   
-  async changeOrderStatus(
-    newStatus: ORDER_STATUS,
-    id?: number,
-    userId?: number  ): Promise<OrderModel | undefined> {
-    const conn = await client.connect();
-
-    const ordrsSql = "UPDATE orders SET status=($1) WHERE id=($2) and user_id=($3) RETURNING *;";
-    return await conn
-      .query(ordrsSql, [newStatus, id, userId])
-      .then((res) => res.rows[0 ?? undefined])
-      .finally(() => conn.release())
-      .catch((e) => undefined);
-  }
-
   async show(id?: number, userId?: number): Promise<OrderModel | undefined> {
     const conn = await client.connect();
     try {
