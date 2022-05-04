@@ -1,16 +1,15 @@
 import express, { Request, Response } from "express";
-import { OrderModel, OrdersStore } from "../../models/order.model";
-import { UsersStore } from "../../models/user.model";
+import { OrderModel, OrdersStore } from "../models/order.model";
+import { UsersStore } from "../models/user.model";
 import httpErrors from "@hapi/boom";
-import { ORDER_STATUS } from "../../utils/Constants";
-import { ProductModel, ProductsStore } from "../../models/product.model";
+import { ORDER_STATUS } from "../utils/Constants";
+import { ProductModel, ProductsStore } from "../models/product.model";
 
 const ordersStore = new OrdersStore();
 const userStore = new UsersStore();
 const productsStore = new ProductsStore();
 
 const show = async (request: Request, response: Response, next: Function) => {
-  // check if user already have active order.
   const user = await userStore.verifyToken(request.headers.authorization)
   if(!user) { return next(httpErrors.unauthorized(`Unauthorized user!`)); }
 
@@ -26,6 +25,9 @@ const show = async (request: Request, response: Response, next: Function) => {
 };
 
 const create = async (request: Request, response: Response, next: Function) => {
+  const user = await userStore.verifyToken(request.headers.authorization)
+  if(!user) { return next(httpErrors.unauthorized(`Unauthorized user!`)); }
+
   const products = (request.body.products as {uid:string, quantity: number}[]) ?? []
   if(!products.length) { return next(httpErrors.badData(`Products required!`)); }
 
@@ -37,8 +39,6 @@ const create = async (request: Request, response: Response, next: Function) => {
   if(productsModels.length !== products.length) { return next(httpErrors.badData(`Invalid products Uids.`)); }
 
   // check if user already have active order.
-  const user = await userStore.verifyToken(request.headers.authorization)
-  if(!user) { return next(httpErrors.unauthorized(`Unauthorized user!`)); }
   const activeOrder = await (await ordersStore.index(user.id)).filter((o) => o.status == ORDER_STATUS.ACTIVE)
   let order: OrderModel | undefined = undefined; 
   if(activeOrder.length) {
@@ -64,6 +64,7 @@ const create = async (request: Request, response: Response, next: Function) => {
 const index = async (request: Request, response: Response, next: Function) => {
   const user = await userStore.verifyToken(request.headers.authorization)
   if(!user) { return next(httpErrors.unauthorized(`Unauthorized user!`)); }
+
   const orders = await ordersStore.index(user?.id);
   response.status(200).json(orders);
 };

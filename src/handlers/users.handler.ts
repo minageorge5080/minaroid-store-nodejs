@@ -1,14 +1,46 @@
 import express, { Request, Response } from "express";
-import { UsersStore } from "../../models/user.model";
+import { UsersStore } from "../models/user.model";
 import jwt from "jsonwebtoken";
 import httpErrors from "@hapi/boom";
 import bcrypt from "bcrypt";
-import randtoken from "rand-token";
-import { generateNanoid } from "../../utils";
-import { Constants } from "../../utils/Constants";
+import { generateNanoid } from "../utils";
+import { Constants } from "../utils/Constants";
+
 
 const store = new UsersStore();
-const authRoute = express.Router();
+
+const index = async (request: Request, response: Response, next: Function) => {
+  const user = await store.verifyToken(request.headers.authorization)
+  if(!user) { return next(httpErrors.unauthorized(`Unauthorized user!`)); }
+
+  const users = await store.index();
+  const userDtos = users.map((user) => {
+    return {
+      firstname: user?.firstname,
+      username: user?.username,
+      lastname: user?.lastname,
+      uid: user?.uid,
+    };
+  })
+  response.status(200).json(userDtos);
+};
+
+const show = async (request: express.Request, response: Response, next: Function) => {
+  const authorization = await store.verifyToken(request.headers.authorization)
+  if(!authorization) { return next(httpErrors.unauthorized(`Unauthorized user!`)); }
+  
+  const user = await store.showByUid(request.params.uid);
+  if (!user) { return next(httpErrors.notFound(`User not found!`)); }
+  
+  const userDto = {
+    firstname: user?.firstname,
+    username: user?.username,
+    lastname: user?.lastname,
+    uid: user?.uid,
+  };
+
+  response.status(200).json(userDto);
+};
 
 const login = async (request: Request, response: Response, next: Function) => {
   const username = request.body.username;
@@ -87,9 +119,12 @@ const signup = async (request: Request, response: Response, next: Function) => {
   response.status(201).json({ token });
 };
 
-const authRoutes = (app: express.Application) => {
-  app.post("/auth/login", login);
-  app.post("/auth/signup", signup);
+const profileRoutes = (app: express.Application) => {
+  app.get("/users", index);
+  app.get("/users/:uid", show);
+  app.post("/users/login", login);
+  app.post("/users/signup", signup);
 };
 
-export default authRoutes;
+
+export default profileRoutes;

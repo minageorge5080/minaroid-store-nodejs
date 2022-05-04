@@ -9,13 +9,17 @@ export type ProductModel = {
 };
 
 export class ProductsStore {
-  // async showUids(uids?: string[]): Promise<ProductModel[] | undefined> {
-  //   if (!uids) {  return undefined; }
-  //    const productsPromises: Promise<ProductModel | undefined>[] = []
-  //    uids.forEach((uid) => { productsPromises.push(this.show(uid)) });
 
-  //     return Promise.all(productsPromises)
-  // }
+  async destroy(uid?: string): Promise<boolean> {
+    if (!uid) {  return false; }
+    const sql = "DELETE FROM products WHERE uid=($1)";
+    const conn = await client.connect();
+    return await conn
+      .query(sql, [uid])
+      .catch((e) => false)
+      .then(() => true)
+      .finally(() => conn.release());
+  }
 
   async show(uid?: string): Promise<ProductModel | undefined> {
     if (!uid) {  return undefined; }
