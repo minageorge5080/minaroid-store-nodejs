@@ -17,13 +17,13 @@ Installation
 
 - Change database configrations in ````./db/database.json```` to match your local environment.
 - Run ````npm install```` to download project dependencies. 
-- For developemnt ````npm run watch``` .
+- For developemnt ````npm run watch```` .
 - For compile & run  ````npm run start```` .
 
 Testing
 ===========================
-- To run integration test ````npm run test:integration```, will automatically create and delete database after testing.
-- To run unit test ````npm run test:unit```
-- To run development server ````npm run watch```
-- For apis check ````REQUIREMENTS.md```
+- To run integration test ````npm run test:integration````, will automatically create and delete database after testing.
+- To run unit test ````npm run test:unit````
+- To run development server ````npm run watch````
+- For apis check ````REQUIREMENTS.md````
 
