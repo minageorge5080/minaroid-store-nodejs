@@ -3,6 +3,7 @@ INSERT INTO users (id, firstname, lastname, username, password_digest, uid) VALU
 
 INSERT INTO products (id, title, description, price, uid) VALUES (50, 'product 1', 'product desc', 500, 'product-1-uid');
 INSERT INTO products (id, title, description, price, uid) VALUES (51, 'product 1', 'product desc', 500, 'product-12-uid');
+INSERT INTO products (id, title, description, price, uid) VALUES (52, 'product 1', 'product desc', 500, 'product-123-uid');
 
 INSERT INTO orders (id, status, user_id) VALUES (50, 'active', 50);
 INSERT INTO orders (id, status, user_id) VALUES (51, 'active', 51);
