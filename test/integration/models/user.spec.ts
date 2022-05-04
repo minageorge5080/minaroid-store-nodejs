@@ -8,7 +8,7 @@ describe("User Model", function () {
             (async function () {
                 expect(store.index).toBeDefined();
                 const results = await store.index()
-                expect(results.length).toEqual(2);
+                expect(results.length).toEqual(3);
                 done();
             })();   
         });
