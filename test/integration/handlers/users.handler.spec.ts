@@ -1,9 +1,37 @@
 import server from "../../../src/server";
 import supertest from "supertest";
+import { UsersStore } from "../../../src/models/user.model";
 
 const request = supertest(server);
+const store = new UsersStore();
 
 describe("Users handler", function () {
+  beforeAll(async () => {
+    await store.create({
+      username: "mina1",
+      firstname: "mina",
+      lastname: "george",
+      password_digest:
+        "$2b$10$bTP6vzI1i5FGKa0kQv6A3uON2hAEGc1lLIFwcvJmt6VIKVVFtL3qG",
+      uid: "mina1-uid",
+    });
+    await store.create({
+      username: "mina2",
+      firstname: "mina",
+      lastname: "george",
+      password_digest:
+        "$2b$10$bTP6vzI1i5FGKa0kQv6A3uON2hAEGc1lLIFwcvJmt6VIKVVFtL3qG",
+      uid: "mina2-uid",
+    });
+  });
+
+  afterAll(async () => {
+    await store.destroy("mina1-uid");
+    await store.destroy("mina2-uid");
+    await store.destroy("mina3-uid");
+    await store.destroyByUsername("mina500");
+  });
+
   it("List users - unauthorized", (done) => {
     (async function () {
       const response = await request.get("/users");
@@ -14,12 +42,10 @@ describe("Users handler", function () {
 
   it("List users - authorization", (done) => {
     (async function () {
-      const response = await request
-        .get("/users")
-        .set({
-          authorization:
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJtaW5hMi11aWQiLCJpYXQiOjE2NTE2MjgzNDh9.muCDO6-cC3PomBbmGiv_QW_fCjqfumTljjxRVB7H0aU",
-        });
+      const response = await request.get("/users").set({
+        authorization:
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJtaW5hMi11aWQiLCJpYXQiOjE2NTE2MjgzNDh9.muCDO6-cC3PomBbmGiv_QW_fCjqfumTljjxRVB7H0aU",
+      });
       expect(response.status).toBe(200);
       done();
     })();
@@ -35,12 +61,10 @@ describe("Users handler", function () {
 
   it("Show user - authorization", (done) => {
     (async function () {
-      const response = await request
-        .get("/users/mina2-uid")
-        .set({
-          authorization:
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJtaW5hMi11aWQiLCJpYXQiOjE2NTE2MjgzNDh9.muCDO6-cC3PomBbmGiv_QW_fCjqfumTljjxRVB7H0aU",
-        });
+      const response = await request.get("/users/mina2-uid").set({
+        authorization:
+          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJtaW5hMi11aWQiLCJpYXQiOjE2NTE2MjgzNDh9.muCDO6-cC3PomBbmGiv_QW_fCjqfumTljjxRVB7H0aU",
+      });
       expect(response.status).toBe(200);
       done();
     })();

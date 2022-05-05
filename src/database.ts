@@ -17,7 +17,7 @@ console.log("NODE_ENV", NODE_ENV);
 
 // default is set to development env.
 let client = new Pool({
-  port: parseInt(POSTGRES_PORT ?? '5430'),
+  port: parseInt(POSTGRES_PORT ?? "5430"),
   host: POSTGRES_HOST,
   database: POSTGRES_DB,
   user: POSTGRES_USER,
@@ -26,7 +26,7 @@ let client = new Pool({
 
 if (NODE_ENV === "test") {
   client = new Pool({
-    port: parseInt(POSTGRES_PORT ?? '5430'),
+    port: parseInt(POSTGRES_PORT ?? "5430"),
     host: POSTGRES_HOST,
     database: POSTGRES_TEST_DB,
     user: POSTGRES_USER,

@@ -11,11 +11,11 @@ const userStore = new UsersStore();
 const index = async (request: Request, response: Response, next: Function) => {
   const products: ProductModel[] | [] = await store.index();
   const dtos = products.map((p) => ({
-      title: p.title,
-      price: p.price,
-      description: p?.description,
-      uid: p.uid,
-    }));
+    title: p.title,
+    price: p.price,
+    description: p?.description,
+    uid: p.uid,
+  }));
 
   response.status(200).json(dtos);
 };
@@ -88,7 +88,7 @@ const destroy = async (
   const deleted = await store.destroy(productUid);
   if (deleted) {
     return response.status(200).send("Product deleted successfully");
-  } 
+  }
   next(httpErrors.badRequest(`Cant delete this product!`));
 };
 

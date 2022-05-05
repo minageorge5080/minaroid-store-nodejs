@@ -12,7 +12,7 @@
     "test:unit": "npm run build && jasmine build/test/unit/**/*.spec.js",
 
     "db:migrate": "db-migrate up",
-    "db:migrate:test": "db-migrate --env test up && db-migrate --env test up:test",
+    "db:migrate:test": "db-migrate --env test up",
     "db:create:test": "db-migrate db:create minaroid_store_test",
     "db:drop:test": "db-migrate db:drop minaroid_store_test",
    

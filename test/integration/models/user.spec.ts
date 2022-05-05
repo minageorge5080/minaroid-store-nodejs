@@ -3,11 +3,36 @@ import { UsersStore } from "../../../src/models/user.model";
 const store = new UsersStore();
 
 describe("User Model", function () {
+  beforeAll(async () => {
+    await store.create({
+      username: "mina1",
+      firstname: "mina",
+      lastname: "george",
+      password_digest:
+        "$2b$10$bTP6vzI1i5FGKa0kQv6A3uON2hAEGc1lLIFwcvJmt6VIKVVFtL3qG",
+      uid: "mina1-uid",
+    });
+    await store.create({
+      username: "mina2",
+      firstname: "mina",
+      lastname: "george",
+      password_digest:
+        "$2b$10$bTP6vzI1i5FGKa0kQv6A3uON2hAEGc1lLIFwcvJmt6VIKVVFtL3qG",
+      uid: "mina2-uid",
+    });
+  });
+
+  afterAll(async () => {
+    await store.destroy("mina1-uid");
+    await store.destroy("mina2-uid");
+    await store.destroy("mina3-uid");
+  });
+
   it("List users", (done) => {
     (async function () {
       expect(store.index).toBeDefined();
       const results = await store.index();
-      expect(results.length).toEqual(3);
+      expect(results.length).toEqual(2);
       done();
     })();
   });

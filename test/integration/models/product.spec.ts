@@ -3,6 +3,34 @@ import { ProductsStore } from "../../../src/models/product.model";
 const store = new ProductsStore();
 
 describe("Product Model", function () {
+  beforeAll(async () => {
+    await store.create({
+      title: "product-1",
+      description: "mina",
+      price: 500,
+      uid: "product-1-uid",
+    });
+    await store.create({
+      title: "product-2",
+      description: "mina",
+      price: 500,
+      uid: "product-12-uid",
+    });
+    await store.create({
+      title: "product-2",
+      description: "mina",
+      price: 500,
+      uid: "product-123-uid",
+    });
+  });
+
+  afterAll(async () => {
+    await store.destroy("product-1-uid");
+    await store.destroy("product-12-uid");
+    await store.destroy("product-123-uid");
+    await store.destroy("product-124-uid");
+  });
+
   it("List products", (done) => {
     (async function () {
       expect(store.index).toBeDefined();
@@ -19,9 +47,9 @@ describe("Product Model", function () {
         price: 400,
         title: "mina",
         description: "Test",
-        uid: "pro4-uid",
+        uid: "product-124-uid",
       });
-      expect(product?.uid).toEqual("pro4-uid");
+      expect(product?.uid).toEqual("product-124-uid");
       done();
     })();
   });

@@ -16,6 +16,18 @@ export type OrderProduct = {
 };
 
 export class OrdersStore {
+  async destroy(id?: number): Promise<boolean> {
+    const productsSql = "DELETE FROM order_products WHERE order_id=($1)";
+    const orderSql = "DELETE FROM orders WHERE id=($1)";
+    const conn = await client.connect();
+    return await conn
+      .query(productsSql, [id])
+      .then(() => conn.query(orderSql, [id]))
+      .catch((e) => false)
+      .then(() => true)
+      .finally(() => conn.release());
+  }
+
   async create(
     status: ORDER_STATUS,
     userId?: number
@@ -64,12 +76,12 @@ export class OrdersStore {
         id: order.id,
         status: order.status,
         products: ordersProducts.map((p) => ({
-            uid: p.uid,
-            title: p.title,
-            description: p.description,
-            price: p.price,
-            quantity: p.quantity,
-          })),
+          uid: p.uid,
+          title: p.title,
+          description: p.description,
+          price: p.price,
+          quantity: p.quantity,
+        })),
       };
       return model;
     } catch (e) {
@@ -95,12 +107,12 @@ export class OrdersStore {
             id: order.id,
             status: order.status,
             products: ordersProducts.map((p) => ({
-                uid: p.uid,
-                title: p.title,
-                description: p.description,
-                price: p.price,
-                quantity: p.quantity,
-              })),
+              uid: p.uid,
+              title: p.title,
+              description: p.description,
+              price: p.price,
+              quantity: p.quantity,
+            })),
           };
           return model;
         })

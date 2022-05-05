@@ -22,11 +22,37 @@ export class UsersStore {
         (error, decoded) => {
           if (!error && decoded) {
             return resolve(this.showByUid((decoded as { uid: string }).uid));
-          } 
+          }
           return resolve(undefined);
         }
       );
     });
+  }
+
+  async destroy(uid?: string): Promise<boolean> {
+    if (!uid) {
+      return false;
+    }
+    const sql = "DELETE FROM users WHERE uid=($1)";
+    const conn = await client.connect();
+    return await conn
+      .query(sql, [uid])
+      .catch((e) => false)
+      .then(() => true)
+      .finally(() => conn.release());
+  }
+
+  async destroyByUsername(username?: string): Promise<boolean> {
+    if (!username) {
+      return false;
+    }
+    const sql = "DELETE FROM users WHERE username=($1)";
+    const conn = await client.connect();
+    return await conn
+      .query(sql, [username])
+      .catch((e) => false)
+      .then(() => true)
+      .finally(() => conn.release());
   }
 
   async showByUid(uid?: string): Promise<UserModel | undefined> {

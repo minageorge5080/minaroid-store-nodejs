@@ -16,11 +16,11 @@ const index = async (request: Request, response: Response, next: Function) => {
 
   const users = await store.index();
   const userDtos = users.map((user) => ({
-      firstname: user?.firstname,
-      username: user?.username,
-      lastname: user?.lastname,
-      uid: user?.uid,
-    }));
+    firstname: user?.firstname,
+    username: user?.username,
+    lastname: user?.lastname,
+    uid: user?.uid,
+  }));
   response.status(200).json(userDtos);
 };
 
