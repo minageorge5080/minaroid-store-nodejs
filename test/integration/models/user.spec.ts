@@ -53,28 +53,6 @@ describe("User Model", function () {
     })();
   });
 
-  it("Valid token", (done) => {
-    (async function () {
-      expect(store.verifyToken).toBeDefined();
-      const user = await store.verifyToken(
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJtaW5hMi11aWQiLCJpYXQiOjE2NTE2MjU0Njl9.4lwUVC3eRUNws8ATLJcHpn9ayBddt51siPD5M6XV1E4"
-      );
-      expect(user).toBeDefined();
-      done();
-    })();
-  });
-
-  it("Invalid token", (done) => {
-    (async function () {
-      expect(store.verifyToken).toBeDefined();
-      const user = await store.verifyToken(
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJtaW5hMi11aWQiLCJpYXQiOjE2NTE2MjU0Njl9.4lwUVC3eRUNws8ATLJcHpn9ayBddt51siPD5M6XV1E455"
-      );
-      expect(user).toBeUndefined();
-      done();
-    })();
-  });
-
   it("Show user by uid", (done) => {
     (async function () {
       expect(store.showByUid).toBeDefined();

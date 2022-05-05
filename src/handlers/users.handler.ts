@@ -5,15 +5,11 @@ import httpErrors from "@hapi/boom";
 import bcrypt from "bcrypt";
 import { generateNanoid } from "../utils";
 import { Constants } from "../utils/Constants";
+import middleware from "../middleware/index";
 
 const store = new UsersStore();
 
 const index = async (request: Request, response: Response, next: Function) => {
-  const user = await store.verifyToken(request.headers.authorization);
-  if (!user) {
-    return next(httpErrors.unauthorized(`Unauthorized user!`));
-  }
-
   const users = await store.index();
   const userDtos = users.map((user) => ({
     firstname: user?.firstname,
@@ -29,11 +25,6 @@ const show = async (
   response: Response,
   next: Function
 ) => {
-  const authorization = await store.verifyToken(request.headers.authorization);
-  if (!authorization) {
-    return next(httpErrors.unauthorized(`Unauthorized user!`));
-  }
-
   const user = await store.showByUid(request.params.uid);
   if (!user) {
     return next(httpErrors.notFound(`User not found!`));
@@ -127,8 +118,8 @@ const signup = async (request: Request, response: Response, next: Function) => {
 };
 
 const profileRoutes = (app: express.Application) => {
-  app.get("/users", index);
-  app.get("/users/:uid", show);
+  app.get("/users", middleware.authMiddleware, index);
+  app.get("/users/:uid", middleware.authMiddleware, show);
   app.post("/users/login", login);
   app.post("/users/signup", signup);
 };

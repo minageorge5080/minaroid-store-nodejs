@@ -1,25 +1,19 @@
 import express, { Request, Response } from "express";
 import { OrderModel, OrdersStore } from "../models/order.model";
-import { UsersStore } from "../models/user.model";
 import httpErrors from "@hapi/boom";
 import { ORDER_STATUS } from "../utils/Constants";
 import { ProductModel, ProductsStore } from "../models/product.model";
+import middleware from "../middleware/index";
 
 const ordersStore = new OrdersStore();
-const userStore = new UsersStore();
 const productsStore = new ProductsStore();
 
 const show = async (request: Request, response: Response, next: Function) => {
-  const user = await userStore.verifyToken(request.headers.authorization);
-  if (!user) {
-    return next(httpErrors.unauthorized(`Unauthorized user!`));
-  }
-
   const orderId = request.params.id;
-  if (!user) {
-    return next(httpErrors.notFound(`User not found!`));
-  }
-  const order = await ordersStore.show(parseInt(orderId), user?.id);
+  const order = await ordersStore.show(
+    parseInt(orderId),
+    response.locals?.userId
+  );
   if (!order) {
     return next(httpErrors.notFound(`Order not found!`));
   }
@@ -27,11 +21,6 @@ const show = async (request: Request, response: Response, next: Function) => {
 };
 
 const create = async (request: Request, response: Response, next: Function) => {
-  const user = await userStore.verifyToken(request.headers.authorization);
-  if (!user) {
-    return next(httpErrors.unauthorized(`Unauthorized user!`));
-  }
-
   const products =
     (request.body.products as { uid: string; quantity: number }[]) ?? [];
   if (!products.length) {
@@ -53,7 +42,7 @@ const create = async (request: Request, response: Response, next: Function) => {
 
   // check if user already have active order.
   const activeOrder = await (
-    await ordersStore.index(user.id)
+    await ordersStore.index(response.locals?.userId)
   ).filter((o) => o.status == ORDER_STATUS.ACTIVE);
   let order: OrderModel | undefined = undefined;
   if (activeOrder.length) {
@@ -61,7 +50,10 @@ const create = async (request: Request, response: Response, next: Function) => {
     order = activeOrder[0];
   } else {
     // create new order
-    order = await ordersStore.create(ORDER_STATUS.ACTIVE, user?.id);
+    order = await ordersStore.create(
+      ORDER_STATUS.ACTIVE,
+      response.locals?.userId
+    );
     if (!order) {
       return next(httpErrors.badRequest(`Cant create order!.`));
     }
@@ -76,7 +68,7 @@ const create = async (request: Request, response: Response, next: Function) => {
   });
 
   if (order) {
-    const newOrder = await ordersStore.show(order?.id, user.id);
+    const newOrder = await ordersStore.show(order?.id, response.locals?.userId);
     response.status(200).json(newOrder);
   } else {
     return next(httpErrors.badRequest(`Cant create order!.`));
@@ -84,19 +76,14 @@ const create = async (request: Request, response: Response, next: Function) => {
 };
 
 const index = async (request: Request, response: Response, next: Function) => {
-  const user = await userStore.verifyToken(request.headers.authorization);
-  if (!user) {
-    return next(httpErrors.unauthorized(`Unauthorized user!`));
-  }
-
-  const orders = await ordersStore.index(user?.id);
+  const orders = await ordersStore.index(response.locals?.userId);
   response.status(200).json(orders);
 };
 
 const ordersRoutes = (app: express.Application) => {
-  app.get("/orders", index);
-  app.post("/orders", create);
-  app.get("/orders/:id", show);
+  app.get("/orders", middleware.authMiddleware, index);
+  app.post("/orders", middleware.authMiddleware, create);
+  app.get("/orders/:id", middleware.authMiddleware, show);
 };
 
 export default ordersRoutes;

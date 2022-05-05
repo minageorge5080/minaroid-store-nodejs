@@ -3,10 +3,9 @@ import { ProductModel, ProductsStore } from "../models/product.model";
 import httpErrors from "@hapi/boom";
 import { generateNanoid } from "../utils";
 import { Constants } from "../utils/Constants";
-import { UsersStore } from "../models/user.model";
+import middleware from "../middleware/index";
 
 const store = new ProductsStore();
-const userStore = new UsersStore();
 
 const index = async (request: Request, response: Response, next: Function) => {
   const products: ProductModel[] | [] = await store.index();
@@ -37,11 +36,6 @@ const show = async (request: Request, response: Response, next: Function) => {
 };
 
 const create = async (request: Request, response: Response, next: Function) => {
-  const user = await userStore.verifyToken(request.headers.authorization);
-  if (!user) {
-    return next(httpErrors.unauthorized(`Unauthorized user!`));
-  }
-
   const title = request.body.title;
   const description = request.body.description;
   const price = request.body.price;
@@ -75,11 +69,6 @@ const destroy = async (
   response: Response,
   next: Function
 ) => {
-  const user = await userStore.verifyToken(request.headers.authorization);
-  if (!user) {
-    return next(httpErrors.unauthorized(`Unauthorized user!`));
-  }
-
   const productUid = request.params.uid;
   const product: ProductModel | undefined = await store.show(productUid);
   if (!product) {
@@ -94,8 +83,8 @@ const destroy = async (
 
 const productsRoutes = (app: express.Application) => {
   app.get("/products", index);
-  app.delete("/products/:uid", destroy);
-  app.post("/products", create);
+  app.delete("/products/:uid", middleware.authMiddleware, destroy);
+  app.post("/products", middleware.authMiddleware, create);
   app.get("/products/:uid", show);
 };
 

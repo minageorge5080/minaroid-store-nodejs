@@ -11,24 +11,6 @@ export type UserModel = {
 };
 
 export class UsersStore {
-  async verifyToken(token?: string): Promise<UserModel | undefined> {
-    return new Promise((resolve, reject) => {
-      if (!token) {
-        return resolve(undefined);
-      }
-      jwt.verify(
-        token.replace("Bearer ", ""),
-        process.env.TOKEN_SECRET ?? "",
-        (error, decoded) => {
-          if (!error && decoded) {
-            return resolve(this.showByUid((decoded as { uid: string }).uid));
-          }
-          return resolve(undefined);
-        }
-      );
-    });
-  }
-
   async destroy(uid?: string): Promise<boolean> {
     if (!uid) {
       return false;
