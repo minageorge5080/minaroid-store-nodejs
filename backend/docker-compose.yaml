@@ -5,7 +5,7 @@ services:
         image: 'postgres'
         environment:
             - POSTGRES_USER=postgres
-            - POSTGRES_PASSWORD=admin
+            - POSTGRES_PASSWORD=postgres
             - POSTGRES_DB=minaroid_store_dev
         ports:
             - '5430:5432'
