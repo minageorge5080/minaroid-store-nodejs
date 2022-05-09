@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "backend:install": "cd backend && npm install",
+    "backend:build": "cd backend && npm run build",
+    "backend:deploy": "cd backend && npm run deploy",
+    "backend:test:unit": "cd backend && npm run test:unit",
+    "backend:test:integration": "cd backend && npm run test:integration"
+
+  }
+}
