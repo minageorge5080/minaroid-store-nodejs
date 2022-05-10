@@ -7,14 +7,14 @@
     
     "build": "tsc",
     "start": "npm run db:migrate && node build/src/server.js", 
-    "deploy": "npm run copy:db && zip build/minaroid_store.zip -r build && eb deploy minaroid-store",
+    "clean": "rm -rf node_modules/",
+    "deploy": "npm run clean && eb deploy minaroid-store ",
     
     "develop": "npm run db:migrate && tsc-watch --noClear -p ./tsconfig.json --onSuccess \"node ./build/src/server.js\"",
    
     "test:integration": "npm run db:create:test && npm run db:migrate:test && NODE_ENV=test jasmine build/test/integration/**/*.spec.js ; npm run db:drop:test",
     "test:unit": "jasmine build/test/unit/**/*.spec.js",
 
-    "copy:db": "cp -R ./migrations ./build/migrations && cp -R ./database.json ./build/database.json",
     "db:migrate": "db-migrate up",
     "db:migrate:test": "db-migrate --env test up",
     "db:create:test": "db-migrate db:create minaroid_store_test",
