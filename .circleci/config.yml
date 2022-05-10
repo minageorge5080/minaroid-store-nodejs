@@ -30,6 +30,10 @@ jobs:
           command: |
             npm run backend:test:unit
 
+      - run:
+          name: Integration Test
+          command: |
+            npm run backend:test:integration
 workflows:
   version: 2
   workflow:
