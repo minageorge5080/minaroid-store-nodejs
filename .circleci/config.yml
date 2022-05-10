@@ -6,8 +6,7 @@ orbs:
 jobs:
 
   Test-Backend:
-    docker:
-      - image: "cimg/base:stable"
+
     steps:
       - node/install
       - checkout
