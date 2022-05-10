@@ -10,9 +10,9 @@ jobs:
       - image: "cimg/base:stable"
       - image: "postgres"
         environment:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: minaroid_store_dev
+          POSTGRES_USER: "postgres"
+          POSTGRES_PASSWORD: "postgres"
+          POSTGRES_DB: "minaroid_store_dev"
 
     steps:
       - node/install
