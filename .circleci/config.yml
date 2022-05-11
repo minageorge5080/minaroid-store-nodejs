@@ -35,6 +35,8 @@ jobs:
             npm run backend:test:integration
 
   Deploy-Backend:
+    docker:
+      - image: "cimg/base:stable"
     executor: aws-cli/default
     steps:
       - node/install
