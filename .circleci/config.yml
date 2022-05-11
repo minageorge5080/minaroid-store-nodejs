@@ -2,6 +2,7 @@ version: 2.1
 orbs:
   node: circleci/node@4.1.0
   eb: circleci/aws-elastic-beanstalk@2.0.1
+  aws-s3: circleci/aws-s3@3.0
 
 jobs:
 
@@ -54,13 +55,34 @@ jobs:
           command: |
             npm run backend:deploy
 
+  Deploy-Front:
+    docker:
+      - image: "cimg/base:stable"
+    steps:
+      - node/install
+      - eb/setup
+      - checkout
+      - run:
+          name: Install
+          command: |
+            npm run frontend:install
+      - run:
+          name: Build
+          command: |
+            npm run frontend:build     
+      - aws-s3/copy:
+          arguments: |
+            --acl public-read \
+            --recursive
+          from: ./build
+          to: 's3://minaroid-store'
+
 workflows:
   version: 2
   workflow:
     jobs:
 
-      - Deploy-Backend:
-          
+      - Deploy-Front:        
           filters:
             branches:
               only:
