@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   node: circleci/node@4.1.0
-  aws-cli: circleci/aws-cli@1.3.1
+  aws-cli: circleci/aws-cli@2.0.6
 
 jobs:
 
@@ -35,11 +35,14 @@ jobs:
             npm run backend:test:integration
 
   Deploy-Backend:
-    docker:
-      - image: "cimg/base:stable"
+    executor: aws-cli/default
     steps:
       - node/install
       - checkout
+      - aws-cli/setup:
+          aws-access-key-id: AWS_ACCESS_KEY
+          aws-secret-access-key: AWS_ACCESS_SECRET
+          aws-region: AWS_REGION_NAME
       - run:
           name: Install
           command: |
@@ -47,17 +50,11 @@ jobs:
       - run:
           name: Build
           command: |
-            npm run backend:build
-      - run: |
-          sudo apt-get update
-          sudo apt-get install -y python-dev python3-pip
-          sudo pip install setuptools
-          sudo pip install --upgrade cffi
-          sudo pip install awsebcli --upgrade --user     
+            npm run backend:build     
       - run:
           name: Deploy
           command: |
-            npm run backend:deploy
+            aws s3 ls
 workflows:
   version: 2
   workflow:
