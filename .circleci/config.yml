@@ -42,7 +42,7 @@ jobs:
       - node/install
       - checkout
       - aws-cli/setup:
-          aws-access-key-id: AWS_ACCESS_KEY
+          aws-access-key-id: AWS_ACCESS_KEYY
           aws-secret-access-key: AWS_ACCESS_SECRET
           aws-region: AWS_REGION_NAME
       - run:
@@ -56,13 +56,14 @@ jobs:
       - run:
           name: Deploy
           command: |
-            echo AWS_ACCESS_KEY && aws s3 ls
+            aws s3 ls
 workflows:
   version: 2
   workflow:
     jobs:
 
       - Deploy-Backend:
+          context: aws
           filters:
             branches:
               only:
