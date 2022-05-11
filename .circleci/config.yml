@@ -40,10 +40,7 @@ jobs:
     steps:
       - node/install
       - checkout
-      - eb/setup:
-          aws-access-key-id: PARAM_AWS_CLI_ACCESS_KEY_ID
-          aws-secret-access-key: PARAM_AWS_CLI_SECRET_ACCESS_KEY
-          aws-region: PARAM_AWS_CLI_REGION
+      - eb/setup
       - run:
       #     name: Install
       #     command: |
