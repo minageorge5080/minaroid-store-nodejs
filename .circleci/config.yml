@@ -40,8 +40,11 @@ jobs:
     steps:
       - node/install
       - checkout
-      - eb/setup
-      # - run:
+      - eb/setup:
+          aws-access-key-id: PARAM_AWS_CLI_ACCESS_KEY_ID
+          aws-secret-access-key: PARAM_AWS_CLI_SECRET_ACCESS_KEY
+          aws-region: PARAM_AWS_CLI_REGION
+      - run:
       #     name: Install
       #     command: |
       #       npm run backend:install
@@ -52,13 +55,14 @@ jobs:
       - run:
           name: Deploy
           command: |
-           eb status
+            eb status
 workflows:
   version: 2
   workflow:
     jobs:
 
       - Deploy-Backend:
+          
           filters:
             branches:
               only:
