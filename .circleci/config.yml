@@ -39,20 +39,21 @@ jobs:
       - image: "cimg/base:stable"
     steps:
       - node/install
-      - checkout
       - eb/setup
-      # - run:
-      #     name: Install
-      #     command: |
-      #       npm run backend:install
-      # - run:
-      #     name: Build
-      #     command: |
-      #       npm run backend:build     
+      - checkout
+      - run:
+          name: Install
+          command: |
+            npm run backend:install
+      - run:
+          name: Build
+          command: |
+            npm run backend:build     
       - run:
           name: Deploy
           command: |
-            eb status
+            npm run backend:deploy
+
 workflows:
   version: 2
   workflow:
