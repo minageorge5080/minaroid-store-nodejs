@@ -41,7 +41,7 @@ jobs:
       - node/install
       - checkout
       - eb/setup
-      - run:
+      # - run:
       #     name: Install
       #     command: |
       #       npm run backend:install
