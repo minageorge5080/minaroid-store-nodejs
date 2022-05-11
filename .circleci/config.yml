@@ -61,19 +61,19 @@ jobs:
     steps:
       - node/install
       - checkout
-      - run:
-          name: Install
-          command: |
-            npm run frontend:install
-      - run:
-          name: Build
-          command: |
-            npm run frontend:build     
+      # - run:
+      #     name: Install
+      #     command: |
+      #       npm run frontend:install
+      # - run:
+      #     name: Build
+      #     command: |
+      #       npm run frontend:build     
       - aws-s3/copy:
           arguments: |
             --acl public-read \
             --recursive
-          from: ./build
+          from: ./src
           to: 's3://minaroid-store'
 
 workflows:
