@@ -33,12 +33,31 @@ jobs:
           name: Integration Test
           command: |
             npm run backend:test:integration
+
+  Deploy-Backend:
+    docker:
+      - image: "cimg/base:stable"
+    steps:
+      - node/install
+      - checkout
+      - run:
+          name: Install
+          command: |
+            npm run backend:install
+      - run:
+          name: Build
+          command: |
+            npm run backend:build
+      - run:
+          name: Deploy
+          command: |
+            npm run backend:deploy
 workflows:
   version: 2
   workflow:
     jobs:
 
-      - Test-Backend:
+      - Deploy-Backend:
           filters:
             branches:
               only:
