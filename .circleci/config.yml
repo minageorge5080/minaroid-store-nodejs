@@ -61,6 +61,8 @@ jobs:
     steps:
       - node/install
       - checkout
+      - run: mkdir bucket && echo "lorem ipsum" > bucket/build_asset.txt
+
       # - run:
       #     name: Install
       #     command: |
@@ -73,7 +75,7 @@ jobs:
           arguments: |
             --acl public-read \
             --recursive
-          from: ./frontend/src
+          from: bucket
           to: 's3://minaroid-store'
 
 workflows:
