@@ -73,7 +73,7 @@ jobs:
           arguments: |
             --acl public-read \
             --recursive
-          from: ./src
+          from: ./frontend/src
           to: 's3://minaroid-store'
 
 workflows:
