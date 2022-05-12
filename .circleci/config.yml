@@ -81,8 +81,24 @@ workflows:
   workflow:
     jobs:
 
+      - Test-Backend:        
+          filters:
+            branches:
+              only:
+                - master
+
+      - Deploy-Backend:        
+          filters:
+            branches:
+              only:
+                - master
+          requires:
+            - Test-Backend
+
       - Deploy-Front:        
           filters:
             branches:
               only:
                 - master
+          requires:
+            - Deploy-Backend
