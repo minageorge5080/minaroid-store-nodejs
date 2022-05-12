@@ -2,10 +2,13 @@ Minaroid Store Pipline
 ===========================
 
 - backend-test
-  -  backend integration and unit tests.
+  -  run unit test cases
+  -  run integration test cases & launch postgres docker images for test.
 
 - backend-deploy
-  -  deploy backend to Elastic beanstalk
+  -  add production env variables to Elastic beanstalk configrations.
+  -  zip the build & migrations & package.json & database.json and package-lock.json then upload it to Elastic beanstalk.
+
 
 - frontend-deploy
-  -  deploy frontend to S3
+  -  copy the build folder to application bucket on s3.
