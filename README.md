@@ -1,8 +1,5 @@
-<p >
-  <a href="https://app.circleci.com/pipelines/github/minageorge5080/minaroid-store-nodejs?branch=master&filter=all">
-    <img src="https://img.shields.io/circleci/build/github/minageorge5080/minaroid-store-nodejs/master.svg?logo=circleci&logoColor=fff&label=CircleCI" alt="CI status" />
-  </a>&nbsp;
-</p>
+
+[![CircleCI](https://circleci.com/gh/minageorge5080/minaroid-store-nodejs.svg?style=svg)](https://circleci.com/gh/minageorge5080/minaroid-store-nodejs)
 
 <hr>Minaroid Store backend
 ===========================
