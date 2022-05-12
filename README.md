@@ -1,5 +1,4 @@
-[![CircleCI](https://circleci.com/gh/circleci/circleci-docs/tree/teesloane-patch-5.svg?style=svg)](https://app.circleci.com/pipelines/github/minageorge5080/minaroid-store-nodejs?filter=all)
-
+[![Build Status](http://circleci-badges-max.herokuapp.com/img/minageorge5080/minaroid-store-nodejs/master)]
 Minaroid Store backend
 ===========================
 
