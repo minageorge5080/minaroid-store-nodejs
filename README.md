@@ -1,5 +1,10 @@
-[![Build Status](http://circleci-badges-max.herokuapp.com/img/minageorge5080/minaroid-store-nodejs/master)]
-Minaroid Store backend
+<p >
+  <a href="https://app.circleci.com/pipelines/github/minageorge5080/minaroid-store-nodejs?branch=master&filter=all">
+    <img src="https://img.shields.io/circleci/build/github/minageorge5080/minaroid-store-nodejs/master.svg?logo=circleci&logoColor=fff&label=CircleCI" alt="CI status" />
+  </a>&nbsp;
+</p>
+
+<hr>Minaroid Store backend
 ===========================
 
 - An online store Apis.
