@@ -1,6 +1,6 @@
-const api = process.env.REACT_APP_PRODUCTS_API_URL || 'http://reactnd-contacts-server.eba-appcpife.us-east-1.elasticbeanstalk.com'
+const api = process.env.REACT_APP_PRODUCTS_API_URL || 'http://minaroid-store.eba-rvjzq2ci.us-east-1.elasticbeanstalk.com'
 
-const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJVNGF2OEVTbjl4ZWl3aUpVcFlEOVhrNGlCb3NBNm4iLCJpYXQiOjE2NTE5MDA2OTN9.FSWLQ_M0xbfQcySZFEQSy7xjftQyF_6E0qCpi5yUjds"
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJ4alQ2anRJNGRjZnZpREd5OXZYQzNVVzVhMWVhaTgiLCJpYXQiOjE2NTIzMzEyMDN9.7SyJ55m3k09Xw1zkGxj_NXvNLl2n8mThci9-4Nz0ygU"
 
 const headers = {
   'Accept': 'application/json',
