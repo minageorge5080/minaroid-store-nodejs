@@ -1,7 +1,7 @@
 
 [![CircleCI](https://circleci.com/gh/minageorge5080/minaroid-store-nodejs.svg?style=svg)](https://circleci.com/gh/minageorge5080/minaroid-store-nodejs)
 
-<hr>Minaroid Store backend
+Minaroid Store backend
 ===========================
 
 - An online store Apis.
