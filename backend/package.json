@@ -8,7 +8,7 @@
     "build": "tsc",
     "start": "npm run db:migrate && node build/src/server.js", 
     "clean": "rm -rf node_modules/",
-    "deploy": "npm run clean && eb deploy minaroid-store ",
+    "deploy": "npm run clean && eb setenv PORT=minaaaaa USERNAME=minaaa && eb deploy minaroid-store",
     
     "develop": "npm run db:migrate && tsc-watch --noClear -p ./tsconfig.json --onSuccess \"node ./build/src/server.js\"",
    
